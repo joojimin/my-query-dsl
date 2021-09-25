@@ -1,6 +1,7 @@
 package study.myquerydsl;
 
 import static org.assertj.core.api.Assertions.*;
+import static study.myquerydsl.entity.QMember.member;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import javax.persistence.EntityManager;
@@ -28,7 +29,6 @@ class QueryDslBasicTest {
         // field parameter로 설정해도 괜찮다
         // 재사용 가능 ( 동시성 문제 고민 ㄴㄴ, SpringBoot에서 제공해주는 EntityManager 자체가 멀티쓰레드에 문제없음 )
         jpaQueryFactory = new JPAQueryFactory(em);
-
 
         // given
         Team teamA = new Team("teamA");
@@ -70,8 +70,8 @@ class QueryDslBasicTest {
 
     @Test
     void startQueryDsl() {
-
         QMember m = new QMember("m"); // QMember를 구분하기 위한 variable "m"
+//        QMember m = QMember.member;
 
         // JPQL과 다르게 문자열을 사용하지 않고 자바 메서드 호출로 쿼리를 만들어냄 ( 오류를 잡아낼 수 있는 타임이 다름 )
         Member actual = jpaQueryFactory
@@ -88,5 +88,19 @@ class QueryDslBasicTest {
          * ( prepareStatement의 파라미터 바인딩 방식을 사용 )
          * 문자열을 더하기하거나 하는 방식으로 쿼리를 만들게되면 SQL Injection 공격을 받을 수 있음
          */
+    }
+
+    @Test
+    void searchTest() {
+        // when
+        Member findMember = jpaQueryFactory
+            .selectFrom(member)
+            .where(member.userName.eq("memberA")
+                                  .and(member.age.eq(10)))
+            .fetchOne();
+
+        // then
+        assertThat(findMember.getUserName()).isEqualTo("memberA");
+        assertThat(findMember.getAge()).isEqualTo(10);
     }
 }

@@ -7,16 +7,13 @@ import static study.myquerydsl.entity.QMember.*;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import javax.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 import study.myquerydsl.entity.Member;
-import study.myquerydsl.entity.QMember;
 import study.myquerydsl.entity.Team;
 
 @ActiveProfiles("dev")
@@ -56,7 +53,6 @@ public class BatchQueryTest {
     }
 
     @Test
-    @Commit
     void bulkUpdateTest() {
 
         // given
